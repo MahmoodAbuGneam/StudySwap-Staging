@@ -18,6 +18,8 @@ def serialize_user(user: dict) -> UserOut:
         academic_field=user.get("academic_field", ""),
         avatar_url=user.get("avatar_url", ""),
         availability=user.get("availability", []),
+        role=user.get("role", "user"),
+        status=user.get("status", "active"),
         session_types=user.get("session_types", []),
         credits=user.get("credits", 0),
         avg_rating=user.get("avg_rating", 0.0),

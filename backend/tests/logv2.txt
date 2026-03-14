@@ -1,0 +1,62 @@
+================================================================= test session starts ==================================================================
+platform win32 -- Python 3.12.0, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Mahmood\Documents\Somaya\skillswap\backend\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Mahmood\Documents\Somaya\skillswap\backend
+configfile: pytest.ini
+testpaths: tests
+plugins: anyio-4.12.1, asyncio-1.3.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 50 items
+
+tests/test_admin.py::test_admin_can_list_users PASSED                                                                                             [  2%]
+tests/test_admin.py::test_admin_can_change_user_status PASSED                                                                                     [  4%]
+tests/test_admin.py::test_user_status_change_affects_access_if_applicable PASSED                                                                  [  6%]
+tests/test_admin.py::test_admin_can_delete_user PASSED                                                                                            [  8%]
+tests/test_admin.py::test_admin_delete_user_cleans_related_data PASSED                                                                            [ 10%]
+tests/test_admin.py::test_admin_can_view_swaps PASSED                                                                                             [ 12%]
+tests/test_admin.py::test_admin_can_view_ratings PASSED                                                                                           [ 14%]
+tests/test_auth.py::test_register_user_success PASSED                                                                                             [ 16%]
+tests/test_auth.py::test_register_rejects_duplicate_email PASSED                                                                                  [ 18%]
+tests/test_auth.py::test_register_rejects_invalid_input PASSED                                                                                    [ 20%]
+tests/test_auth.py::test_login_success PASSED                                                                                                     [ 22%]
+tests/test_auth.py::test_login_rejects_wrong_password PASSED                                                                                      [ 24%]
+tests/test_auth.py::test_login_rejects_unknown_user PASSED                                                                                        [ 26%]
+tests/test_auth.py::test_protected_route_requires_authentication PASSED                                                                           [ 28%]
+tests/test_auth.py::test_invalid_token_is_rejected PASSED                                                                                         [ 30%]
+tests/test_authorization.py::test_user_can_update_own_profile PASSED                                                                              [ 32%]
+tests/test_authorization.py::test_user_cannot_update_another_users_profile PASSED                                                                 [ 34%]
+tests/test_authorization.py::test_non_admin_cannot_access_admin_routes PASSED                                                                     [ 36%]
+tests/test_authorization.py::test_admin_can_access_admin_routes PASSED                                                                            [ 38%]
+tests/test_favorites.py::test_user_can_add_favorite PASSED                                                                                        [ 40%]
+tests/test_favorites.py::test_user_can_remove_favorite PASSED                                                                                     [ 42%]
+tests/test_favorites.py::test_user_cannot_favorite_invalid_user PASSED                                                                            [ 44%]
+tests/test_matching.py::test_swap_score_returns_valid_range PASSED                                                                                [ 46%]
+tests/test_matching.py::test_swap_score_reflects_better_compatibility PASSED                                                                      [ 48%]
+tests/test_matching.py::test_mutual_match_is_detected PASSED                                                                                      [ 50%]
+tests/test_matching.py::test_non_mutual_match_is_not_treated_as_strong_match PASSED                                                               [ 52%]
+tests/test_ratings.py::test_user_can_rate_after_completed_swap PASSED                                                                             [ 54%]
+tests/test_ratings.py::test_user_cannot_rate_before_completed_swap PASSED                                                                         [ 56%]
+tests/test_ratings.py::test_rating_score_must_be_between_1_and_5 PASSED                                                                           [ 58%]
+tests/test_ratings.py::test_rating_updates_user_aggregate_values PASSED                                                                           [ 60%]
+tests/test_ratings.py::test_admin_can_delete_rating_and_reaggregate PASSED                                                                        [ 62%]
+tests/test_skills.py::test_user_can_add_offered_skill PASSED                                                                                      [ 64%]
+tests/test_skills.py::test_user_can_add_wanted_skill PASSED                                                                                       [ 66%]
+tests/test_skills.py::test_skill_rejects_invalid_level PASSED                                                                                     [ 68%]
+tests/test_skills.py::test_skill_rejects_invalid_session_type PASSED                                                                              [ 70%]
+tests/test_skills.py::test_admin_can_create_category PASSED                                                                                       [ 72%]
+tests/test_skills.py::test_non_admin_cannot_create_category PASSED                                                                                [ 74%]
+tests/test_swaps.py::test_user_can_create_swap_request PASSED                                                                                     [ 76%]
+tests/test_swaps.py::test_swap_request_requires_valid_participants PASSED                                                                         [ 78%]
+tests/test_swaps.py::test_user_can_accept_swap_request PASSED                                                                                     [ 80%]
+tests/test_swaps.py::test_non_participant_cannot_accept_swap_request PASSED                                                                       [ 82%]
+tests/test_swaps.py::test_swap_cannot_be_completed_without_proper_flow PASSED                                                                     [ 84%]
+tests/test_swaps.py::test_both_sides_confirm_before_rating_allowed PASSED                                                                         [ 86%]
+tests/test_swaps.py::test_user_can_list_their_swaps PASSED                                                                                        [ 88%]
+tests/test_validation.py::test_email_is_normalized_if_expected PASSED                                                                             [ 90%]
+tests/test_validation.py::test_password_length_limits_are_enforced PASSED                                                                         [ 92%]
+tests/test_validation.py::test_display_name_validation_is_enforced PASSED                                                                         [ 94%]
+tests/test_validation.py::test_object_id_validation_rejects_bad_ids PASSED                                                                        [ 96%]
+tests/test_validation.py::test_review_length_limits_are_enforced PASSED                                                                           [ 98%]
+tests/test_validation.py::test_tags_limits_are_enforced PASSED                                                                                    [100%]
+
+=================================================================== warnings summary ===================================================================

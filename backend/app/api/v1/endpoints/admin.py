@@ -102,7 +102,7 @@ async def delete_user(
     await db["users"].delete_one({"_id": oid})
     await db["skills"].delete_many({"user_id": str(oid)})
     await db["swaps"].delete_many(
-        {"$or": [{"requester_id": str(oid)}, {"receiver_id": str(oid)}]}
+        {"$or": [{"sender_id": str(oid)}, {"receiver_id": str(oid)}]}
     )
     await db["favorites"].delete_many(
         {"$or": [{"user_id": str(oid)}, {"favorite_id": str(oid)}]}
@@ -227,7 +227,7 @@ async def delete_rating(
             {
                 "$group": {
                     "_id": None,
-                    "avg_rating": {"$avg": "$rating"},
+                    "avg_rating": {"$avg": "$score"},
                     "total_ratings": {"$sum": 1},
                 }
             },
