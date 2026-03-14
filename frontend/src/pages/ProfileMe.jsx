@@ -6,7 +6,8 @@ import Avatar from '../components/Avatar'
 import SkillBadge from '../components/SkillBadge'
 import SkillModal from '../components/SkillModal'
 import StarRating from '../components/StarRating'
-import { IconPlus, IconTrash, IconEdit, IconCoin } from '../components/Icons'
+import { IconPlus, IconTrash, IconEdit } from '../components/Icons'
+import TrustBadge from '../components/TrustBadge'
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 const SESSION_TYPES = ['online', 'in-person', 'hybrid']
@@ -91,10 +92,18 @@ export default function ProfileMe() {
       <div className="page-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <h1 className="text-page-title">My Profile</h1>
-          <p className="text-muted" style={{ marginTop: 4 }}>
-            {user.credits} credit{user.credits !== 1 ? 's' : ''} earned
-            {user.avg_rating > 0 ? ` · ★ ${user.avg_rating.toFixed(1)} avg rating` : ''}
-          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6, flexWrap: 'wrap' }}>
+            <TrustBadge badge={user.badge || 'Newcomer'} />
+            <span style={{ fontSize: 13, color: 'var(--text-3)' }}>
+              Contribution Score: <strong style={{ color: 'var(--text-2)' }}>{user.credits}</strong>
+            </span>
+            {user.avg_rating > 0 && (
+              <span style={{ fontSize: 13, color: 'var(--text-3)' }}>
+                · ★ <strong style={{ color: 'var(--text-2)' }}>{user.avg_rating.toFixed(1)}</strong>
+                {user.total_ratings > 0 && ` (${user.total_ratings} review${user.total_ratings !== 1 ? 's' : ''})`}
+              </span>
+            )}
+          </div>
         </div>
         <button
           form="profile-form"

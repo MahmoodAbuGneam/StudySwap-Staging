@@ -1,6 +1,9 @@
 import { useState, useEffect, useMemo } from 'react'
 import { getUsers, updateUserStatus, deleteUser } from '../../api/admin'
 import { IconSearch, IconTrash, IconUser } from '../../components/Icons'
+import { useAuth } from '../../context/AuthContext'
+
+const PROTECTED_ADMIN_EMAIL = 'administrator@gmail.com'
 
 const STATUS_BADGE = {
   active:    { bg: 'var(--green-pale)',  color: 'var(--green)',  label: 'Active'    },
@@ -28,6 +31,7 @@ function StarDisplay({ rating }) {
 }
 
 export default function AdminUsers() {
+  const { user: currentUser } = useAuth()
   const [users, setUsers]           = useState([])
   const [loading, setLoading]       = useState(true)
   const [error, setError]           = useState(null)
@@ -223,14 +227,27 @@ export default function AdminUsers() {
                         >
                           {updating[u.id] ? '…' : 'Set'}
                         </button>
-                        <button
-                          className="btn btn-danger btn-sm btn-icon"
-                          disabled={deleting[u.id]}
-                          onClick={() => handleDelete(u.id, u.display_name)}
-                          title="Delete user"
-                        >
-                          <span style={{ width: 14, height: 14 }}><IconTrash /></span>
-                        </button>
+                        {(() => {
+                          const isProtected = u.email === PROTECTED_ADMIN_EMAIL
+                          const isSelf      = u.id === currentUser?.id
+                          const disabled    = deleting[u.id] || isProtected || isSelf
+                          const title       = isProtected
+                            ? 'The main administrator account cannot be deleted'
+                            : isSelf
+                            ? 'You cannot delete your own account'
+                            : 'Delete user'
+                          return (
+                            <button
+                              className="btn btn-danger btn-sm btn-icon"
+                              disabled={disabled}
+                              onClick={() => !disabled && handleDelete(u.id, u.display_name)}
+                              title={title}
+                              style={disabled && !deleting[u.id] ? { opacity: 0.35, cursor: 'not-allowed' } : {}}
+                            >
+                              <span style={{ width: 14, height: 14 }}><IconTrash /></span>
+                            </button>
+                          )
+                        })()}
                       </div>
                     </td>
                   </tr>

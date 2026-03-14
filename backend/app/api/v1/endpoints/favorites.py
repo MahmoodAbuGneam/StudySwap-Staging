@@ -3,6 +3,7 @@ from bson import ObjectId
 
 from app.db.mongodb import get_db
 from app.core.security import get_current_user
+from app.schemas.user import get_badge
 
 router = APIRouter()
 
@@ -60,6 +61,7 @@ async def list_favorites(current_user=Depends(get_current_user), db=Depends(get_
                     "avg_rating": user.get("avg_rating", 0.0),
                     "total_ratings": user.get("total_ratings", 0),
                     "credits": user.get("credits", 0),
+                    "badge": get_badge(user.get("credits", 0)),
                     "session_types": user.get("session_types", []),
                 })
         except Exception:

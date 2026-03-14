@@ -4,7 +4,8 @@ import { browseUsers } from '../api/browse'
 import { getCategories } from '../api/skills'
 import Avatar from '../components/Avatar'
 import StarRating from '../components/StarRating'
-import { IconSearch, IconFilter, IconCoin } from '../components/Icons'
+import TrustBadge from '../components/TrustBadge'
+import { IconSearch } from '../components/Icons'
 
 const LEVELS = ['beginner', 'intermediate', 'advanced']
 
@@ -221,10 +222,7 @@ export default function Browse() {
 
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
                     <StarRating value={u.avg_rating} readonly size="sm" />
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--text-3)' }}>
-                      <span style={{ width: 13, height: 13, color: 'var(--gold)' }}><IconCoin /></span>
-                      {u.credits}
-                    </div>
+                    {u.badge && <TrustBadge badge={u.badge} size="sm" />}
                   </div>
 
                   {u.session_types?.length > 0 && (

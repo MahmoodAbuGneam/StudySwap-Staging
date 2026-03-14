@@ -1,5 +1,6 @@
 from typing import List, Dict, Any
 from datetime import datetime, date
+from app.schemas.user import get_badge
 
 
 LEVEL_ORDER = {"beginner": 0, "intermediate": 1, "advanced": 2}
@@ -180,6 +181,7 @@ async def find_mutual_matches(current_user: dict, db) -> List[Dict[str, Any]]:
             )
         ]
 
+        credits = them.get("credits", 0)
         matches.append({
             "user": {
                 "id":             cid,
@@ -190,12 +192,13 @@ async def find_mutual_matches(current_user: dict, db) -> List[Dict[str, Any]]:
                 "session_types":  them.get("session_types", []),
                 "avg_rating":     them.get("avg_rating", 0.0),
                 "total_ratings":  them.get("total_ratings", 0),
-                "credits":        them.get("credits", 0),
+                "credits":        credits,
+                "badge":          get_badge(credits),
             },
             "swap_score":        score,
             "they_can_teach_me": they_can_teach_me,
             "i_can_teach_them":  i_can_teach_them,
         })
 
-    matches.sort(key=lambda m: m["swap_score"], reverse=True)
+    matches.sort(key=lambda m: (m["swap_score"], m["user"].get("credits", 0)), reverse=True)
     return matches

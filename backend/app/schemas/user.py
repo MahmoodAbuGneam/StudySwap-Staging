@@ -65,6 +65,16 @@ class UserUpdate(BaseModel):
         return v
 
 
+def get_badge(credits: int) -> str:
+    if credits >= 16:
+        return "Top Contributor"
+    elif credits >= 8:
+        return "Trusted Peer"
+    elif credits >= 3:
+        return "Active Learner"
+    return "Newcomer"
+
+
 class UserOut(BaseModel):
     id: str
     email: str
@@ -79,6 +89,7 @@ class UserOut(BaseModel):
     total_ratings: int
     role: str
     status: str
+    badge: str
 
 
 class TokenOut(BaseModel):

@@ -4,7 +4,8 @@ import { listFavorites, removeFavorite } from '../api/favorites'
 import Avatar from '../components/Avatar'
 import StarRating from '../components/StarRating'
 import SwapRequestModal from '../components/SwapRequestModal'
-import { IconStar, IconSwap, IconCoin } from '../components/Icons'
+import { IconStar, IconSwap } from '../components/Icons'
+import TrustBadge from '../components/TrustBadge'
 
 export default function Favorites() {
   const [favorites, setFavorites] = useState([])
@@ -79,10 +80,7 @@ export default function Favorites() {
                   )}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <StarRating value={u.avg_rating} readonly size="sm" />
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--text-3)' }}>
-                      <span style={{ width: 12, height: 12, color: 'var(--gold)' }}><IconCoin /></span>
-                      {u.credits}
-                    </div>
+                    {u.badge && <TrustBadge badge={u.badge} size="sm" />}
                   </div>
                 </div>
                 <button

@@ -12,6 +12,7 @@ import {
   IconCoin, IconSwap, IconStar, IconMatch,
   IconArrowRight, IconBrowse, IconUser, IconZap,
 } from '../components/Icons'
+import TrustBadge from '../components/TrustBadge'
 
 const STATUS_COLORS = {
   pending:   { bg: 'var(--amber-pale)', color: 'var(--amber)' },
@@ -53,7 +54,7 @@ export default function Dashboard() {
   const wantedSkills = skills.filter((s) => s.type === 'wanted')
 
   const STATS = [
-    { label: 'Credits earned',    value: user?.credits ?? 0,         icon: IconCoin,  color: 'var(--gold)',   bg: 'var(--gold-pale)'  },
+    { label: 'Contribution Score', value: user?.credits ?? 0,         icon: IconCoin,  color: 'var(--gold)',   bg: 'var(--gold-pale)'  },
     { label: 'Swaps completed',   value: completedCount,              icon: IconSwap,  color: 'var(--teal)',   bg: 'var(--teal-pale)'  },
     { label: 'Average rating',    value: user?.avg_rating > 0 ? user.avg_rating.toFixed(1) : '—', icon: IconStar, color: '#E8B84B', bg: 'var(--amber-pale)' },
     { label: 'Mutual matches',    value: matches.length,              icon: IconMatch, color: 'var(--navy-3)', bg: 'var(--navy-alpha)' },
@@ -79,10 +80,13 @@ export default function Dashboard() {
       {/* ── Header ───────────────────────────────────── */}
       <div style={{ marginBottom: 32, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 600, color: 'var(--text-1)', marginBottom: 4 }}>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 600, color: 'var(--text-1)', marginBottom: 6 }}>
             {greeting(user?.display_name)}
           </h1>
-          <p style={{ fontSize: 14, color: 'var(--text-3)' }}>{dateStr()}</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <p style={{ fontSize: 14, color: 'var(--text-3)' }}>{dateStr()}</p>
+            {user?.badge && <TrustBadge badge={user.badge} size="sm" />}
+          </div>
         </div>
         <Link to="/profile/me" className="btn btn-ghost btn-sm" style={{ gap: 6 }}>
           <span style={{ width: 16, height: 16 }}><IconUser /></span>

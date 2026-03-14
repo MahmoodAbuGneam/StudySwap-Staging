@@ -6,7 +6,8 @@ import ScoreRing from '../components/ScoreRing'
 import SkillBadge from '../components/SkillBadge'
 import StarRating from '../components/StarRating'
 import SwapRequestModal from '../components/SwapRequestModal'
-import { IconCoin, IconSwap, IconArrowRight } from '../components/Icons'
+import { IconSwap, IconArrowRight } from '../components/Icons'
+import TrustBadge from '../components/TrustBadge'
 
 export default function Matches() {
   const [matches, setMatches] = useState([])
@@ -100,10 +101,10 @@ export default function Matches() {
                           {match.user.avg_rating > 0 ? match.user.avg_rating.toFixed(1) : '—'}
                         </span>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: 'var(--text-3)' }}>
-                        <span style={{ width: 13, height: 13, color: 'var(--gold)' }}><IconCoin /></span>
-                        {match.user.credits} credits
-                      </div>
+                      {match.user.badge && <TrustBadge badge={match.user.badge} size="sm" />}
+                      <span style={{ fontSize: 12, color: 'var(--text-3)' }}>
+                        Score: <strong style={{ color: 'var(--text-2)' }}>{match.user.credits}</strong>
+                      </span>
                       {match.user.session_types?.map((t) => (
                         <span key={t} className="badge badge-navy" style={{ textTransform: 'capitalize' }}>{t}</span>
                       ))}

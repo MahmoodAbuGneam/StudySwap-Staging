@@ -3,7 +3,7 @@ from bson import ObjectId
 from datetime import datetime
 
 from app.db.mongodb import get_db
-from app.schemas.user import UserOut, UserUpdate
+from app.schemas.user import UserOut, UserUpdate, get_badge
 from app.core.security import get_current_user
 
 router = APIRouter()
@@ -24,6 +24,7 @@ def serialize_user(user: dict) -> UserOut:
         credits=user.get("credits", 0),
         avg_rating=user.get("avg_rating", 0.0),
         total_ratings=user.get("total_ratings", 0),
+        badge=get_badge(user.get("credits", 0)),
     )
 
 

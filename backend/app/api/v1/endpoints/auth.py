@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.db.mongodb import get_db
-from app.schemas.user import UserRegister, TokenOut, UserOut
+from app.schemas.user import UserRegister, TokenOut, UserOut, get_badge
 from app.models.user import user_document
 from app.core.security import hash_password, verify_password, create_access_token, get_current_user
 
@@ -24,6 +24,7 @@ def serialize_user(user: dict) -> UserOut:
         total_ratings=user.get("total_ratings", 0),
         role=user.get("role", "user"),
         status=user.get("status", "active"),
+        badge=get_badge(user.get("credits", 0)),
     )
 
 

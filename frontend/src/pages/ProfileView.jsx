@@ -9,7 +9,8 @@ import Avatar from '../components/Avatar'
 import SkillBadge from '../components/SkillBadge'
 import StarRating from '../components/StarRating'
 import SwapRequestModal from '../components/SwapRequestModal'
-import { IconStar, IconSwap, IconCoin, IconEdit } from '../components/Icons'
+import { IconStar, IconSwap, IconEdit } from '../components/Icons'
+import TrustBadge from '../components/TrustBadge'
 
 export default function ProfileView() {
   const { id } = useParams()
@@ -27,11 +28,18 @@ export default function ProfileView() {
   useEffect(() => {
     if (!id) return
     Promise.all([
-      getUser(id).then(setProfile),
+      getUser(id).catch(() => null).then(p => {
+        // Backend returns 404 for admin profiles — redirect non-admins away
+        if (!p || p.role === 'admin') {
+          if (me?.role !== 'admin') { navigate('/', { replace: true }); return null }
+        }
+        setProfile(p)
+        return p
+      }),
       getUserSkills(id).then(setSkills),
       getUserRatings(id).then((r) => setRatings(r.ratings || [])),
     ]).finally(() => setLoading(false))
-  }, [id])
+  }, [id, me])
 
   useEffect(() => {
     if (me && profile) setIsFav(me.favorites?.includes(profile.id))
@@ -68,9 +76,12 @@ export default function ProfileView() {
           <div style={{ flex: 1, minWidth: 200 }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
               <div>
-                <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 600, color: 'var(--text-1)', marginBottom: 4 }}>
-                  {profile.display_name}
-                </h1>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+                  <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 600, color: 'var(--text-1)' }}>
+                    {profile.display_name}
+                  </h1>
+                  {profile.badge && <TrustBadge badge={profile.badge} />}
+                </div>
                 {profile.academic_field && (
                   <p style={{ fontSize: 14, color: 'var(--text-3)', marginBottom: 10 }}>{profile.academic_field}</p>
                 )}
@@ -81,9 +92,8 @@ export default function ProfileView() {
                       {profile.total_ratings > 0 ? `${profile.avg_rating.toFixed(1)} (${profile.total_ratings})` : 'No ratings yet'}
                     </span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 13, color: 'var(--text-3)' }}>
-                    <span style={{ width: 14, height: 14, color: 'var(--gold)' }}><IconCoin /></span>
-                    {profile.credits} credit{profile.credits !== 1 ? 's' : ''}
+                  <div style={{ fontSize: 13, color: 'var(--text-3)' }}>
+                    Contribution Score: <strong style={{ color: 'var(--text-2)' }}>{profile.credits}</strong>
                   </div>
                 </div>
                 {profile.session_types?.length > 0 && (

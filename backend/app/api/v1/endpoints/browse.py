@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from typing import Optional, List
 
 from app.db.mongodb import get_db
-from app.schemas.user import UserOut
+from app.schemas.user import get_badge
 
 router = APIRouter()
 
@@ -20,6 +20,7 @@ def serialize_user(user: dict) -> dict:
         "credits": user.get("credits", 0),
         "avg_rating": user.get("avg_rating", 0.0),
         "total_ratings": user.get("total_ratings", 0),
+        "badge": get_badge(user.get("credits", 0)),
     }
 
 
@@ -53,7 +54,7 @@ async def browse_users(
             pass
 
     skip = (page - 1) * limit
-    users = await db["users"].find(query).skip(skip).limit(limit).to_list(None)
+    users = await db["users"].find(query).sort([("avg_rating", -1), ("credits", -1)]).skip(skip).limit(limit).to_list(None)
     total = await db["users"].count_documents(query)
 
     return {
