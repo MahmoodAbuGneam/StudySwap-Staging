@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import Avatar from './Avatar'
 import {
   IconDashboard, IconBrowse, IconMatch, IconSwap,
-  IconStar, IconUser, IconLogout,
+  IconStar, IconUser, IconLogout, IconBook, IconPeople,
 } from './Icons'
 
 const NAV = [
@@ -55,6 +55,40 @@ export default function Sidebar() {
           <span className="nav-item-icon"><IconUser /></span>
           Profile
         </NavLink>
+
+        {user?.role === 'admin' && (
+          <>
+            <div className="sidebar-section-label">Admin</div>
+            <NavLink
+              to="/admin/users"
+              className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+            >
+              <span className="nav-item-icon"><IconPeople /></span>
+              Users
+            </NavLink>
+            <NavLink
+              to="/admin/categories"
+              className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+            >
+              <span className="nav-item-icon"><IconBook /></span>
+              Categories
+            </NavLink>
+            <NavLink
+              to="/admin/swaps"
+              className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+            >
+              <span className="nav-item-icon"><IconSwap /></span>
+              Swaps
+            </NavLink>
+            <NavLink
+              to="/admin/ratings"
+              className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+            >
+              <span className="nav-item-icon"><IconStar /></span>
+              Ratings
+            </NavLink>
+          </>
+        )}
       </nav>
 
       {/* Footer: user + logout */}

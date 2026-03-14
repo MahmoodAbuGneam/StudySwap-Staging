@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import auth, users, skills, browse, matches, swaps, favorites, ratings
+from app.api.v1.endpoints import auth, users, skills, browse, matches, swaps, favorites, ratings, admin
 
 api_router = APIRouter()
 
@@ -12,3 +12,4 @@ api_router.include_router(matches.router, prefix="/matches", tags=["matches"])
 api_router.include_router(swaps.router, prefix="/swaps", tags=["swaps"])
 api_router.include_router(favorites.router, prefix="/favorites", tags=["favorites"])
 api_router.include_router(ratings.router, prefix="/ratings", tags=["ratings"])
+api_router.include_router(admin.router, prefix="/admin", tags=["admin"])

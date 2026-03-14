@@ -25,6 +25,8 @@ def user_document(
         "avg_rating": 0.0,
         "total_ratings": 0,
         "favorites": [],
+        "role": "user",
+        "status": "active",
         "created_at": datetime.utcnow(),
         "updated_at": datetime.utcnow(),
     }

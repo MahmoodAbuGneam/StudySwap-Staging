@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import AdminRoute from './components/AdminRoute'
 import AppLayout from './components/AppLayout'
 
 import Home      from './pages/Home'
@@ -13,6 +14,10 @@ import Browse    from './pages/Browse'
 import Matches   from './pages/Matches'
 import Swaps     from './pages/Swaps'
 import Favorites from './pages/Favorites'
+import AdminUsers      from './pages/admin/AdminUsers'
+import AdminCategories from './pages/admin/AdminCategories'
+import AdminSwaps      from './pages/admin/AdminSwaps'
+import AdminRatings    from './pages/admin/AdminRatings'
 
 export default function App() {
   return (
@@ -47,6 +52,12 @@ export default function App() {
             path="/favorites"
             element={<ProtectedRoute><Favorites /></ProtectedRoute>}
           />
+
+          {/* ── Admin routes ─────────────────────────── */}
+          <Route path="/admin/users"      element={<AdminRoute><AdminUsers /></AdminRoute>} />
+          <Route path="/admin/categories" element={<AdminRoute><AdminCategories /></AdminRoute>} />
+          <Route path="/admin/swaps"      element={<AdminRoute><AdminSwaps /></AdminRoute>} />
+          <Route path="/admin/ratings"    element={<AdminRoute><AdminRatings /></AdminRoute>} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

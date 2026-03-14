@@ -22,6 +22,8 @@ def serialize_user(user: dict) -> UserOut:
         credits=user.get("credits", 0),
         avg_rating=user.get("avg_rating", 0.0),
         total_ratings=user.get("total_ratings", 0),
+        role=user.get("role", "user"),
+        status=user.get("status", "active"),
     )
 
 

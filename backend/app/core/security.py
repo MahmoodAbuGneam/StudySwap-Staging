@@ -46,3 +46,12 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db=Depends(get_d
     if user is None:
         raise credentials_exception
     return user
+
+
+async def get_admin_user(current_user=Depends(get_current_user)):
+    if current_user.get("role") != "admin":
+        raise HTTPException(
+            status_code=403,
+            detail="Admin access required"
+        )
+    return current_user
