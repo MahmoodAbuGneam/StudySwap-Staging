@@ -21,6 +21,8 @@ async def add_favorite(user_id: str, current_user=Depends(get_current_user), db=
     target = await db["users"].find_one({"_id": target_oid})
     if not target:
         raise HTTPException(status_code=404, detail="User not found")
+    if target.get("role") == "admin":
+        raise HTTPException(status_code=400, detail="Cannot favorite an admin account")
 
     await db["users"].update_one(
         {"_id": current_user["_id"]},

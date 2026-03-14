@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.db.mongodb import connect_db, close_db
+from app.db.mongodb import connect_db, close_db, get_db
+from app.db.seed import seed_admin
 from app.api.v1.router import api_router
 
 app = FastAPI(
@@ -22,6 +23,8 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup():
     await connect_db()
+    db = await get_db()
+    await seed_admin(db)
 
 
 @app.on_event("shutdown")

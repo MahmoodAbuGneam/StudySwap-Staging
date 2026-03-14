@@ -35,7 +35,7 @@ async def get_user(user_id: str, db=Depends(get_db)):
         raise HTTPException(status_code=400, detail="Invalid user ID")
 
     user = await db["users"].find_one({"_id": oid})
-    if not user:
+    if not user or user.get("role") == "admin":
         raise HTTPException(status_code=404, detail="User not found")
     return serialize_user(user)
 

@@ -134,8 +134,18 @@ async def find_mutual_matches(current_user: dict, db) -> List[Dict[str, Any]]:
 
     from bson import ObjectId
 
+    # Fetch all candidate user docs at once, excluding admins
+    from bson import ObjectId as _OID
+    candidate_user_docs = await db["users"].find(
+        {"_id": {"$in": [_OID(cid) for cid in candidate_ids if len(cid) == 24]},
+         "role": {"$ne": "admin"}}
+    ).to_list(None)
+    valid_candidate_ids = {str(u["_id"]): u for u in candidate_user_docs}
+
     matches = []
     for cid in candidate_ids:
+        if cid not in valid_candidate_ids:
+            continue
         their_skills = await db["skills"].find({"user_id": cid}).to_list(None)
         their_wanted_names = {s["name"].strip().lower() for s in their_skills if s["type"] == "wanted"}
         their_wanted_cats  = {s["category"]             for s in their_skills if s["type"] == "wanted"}
@@ -148,10 +158,7 @@ async def find_mutual_matches(current_user: dict, db) -> List[Dict[str, Any]]:
         if not i_can_teach:
             continue
 
-        try:
-            them = await db["users"].find_one({"_id": ObjectId(cid)})
-        except Exception:
-            continue
+        them = valid_candidate_ids.get(cid)
         if not them:
             continue
 

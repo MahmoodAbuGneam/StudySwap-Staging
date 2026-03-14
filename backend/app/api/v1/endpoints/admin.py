@@ -84,12 +84,19 @@ async def update_user_status(
     return admin_serialize_user(result)
 
 
+PROTECTED_ADMIN_EMAIL = "administrator@gmail.com"
+
+
 @router.delete("/users/{user_id}")
 async def delete_user(
     user_id: str,
     db=Depends(get_db),
     _admin=Depends(get_admin_user),
 ):
+    # Prevent any admin from deleting their own account
+    if user_id == str(_admin["_id"]):
+        raise HTTPException(status_code=403, detail="You cannot delete your own account")
+
     try:
         oid = ObjectId(user_id)
     except Exception:
@@ -98,6 +105,10 @@ async def delete_user(
     user = await db["users"].find_one({"_id": oid})
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
+
+    # Prevent deletion of the protected main admin account
+    if user.get("email") == PROTECTED_ADMIN_EMAIL:
+        raise HTTPException(status_code=403, detail="The main administrator account cannot be deleted")
 
     await db["users"].delete_one({"_id": oid})
     await db["skills"].delete_many({"user_id": str(oid)})

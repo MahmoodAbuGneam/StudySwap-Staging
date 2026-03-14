@@ -43,7 +43,7 @@ async def browse_users(
     matching_skills = await db["skills"].find(skill_filter, {"user_id": 1}).to_list(None)
     user_ids_with_skills = list({s["user_id"] for s in matching_skills})
 
-    query = {}
+    query = {"role": {"$ne": "admin"}}
     if category or skill or level:
         query["_id"] = {"$in": []}
         from bson import ObjectId
