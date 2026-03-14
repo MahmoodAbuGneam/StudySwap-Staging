@@ -74,8 +74,8 @@ export default function Browse() {
     <div style={{ display: 'flex', minHeight: '100vh' }}>
       {/* ── Filter sidebar ─────────────────────────── */}
       <div style={{
-        width: 220, flexShrink: 0,
-        padding: '32px 0 32px 36px',
+        width: 200, flexShrink: 0,
+        padding: '32px 0 32px 48px',
         position: 'sticky', top: 0,
         height: '100vh', overflowY: 'auto',
       }}>
@@ -141,7 +141,7 @@ export default function Browse() {
       </div>
 
       {/* ── Main content ───────────────────────────── */}
-      <div style={{ flex: 1, padding: '32px 36px 32px 24px', minWidth: 0 }}>
+      <div style={{ flex: 1, padding: '32px 48px 32px 24px', minWidth: 0 }}>
         {/* Header + search */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 24, flexWrap: 'wrap' }}>
           <div>
@@ -192,7 +192,7 @@ export default function Browse() {
           </div>
         ) : (
           <>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16 }}>
               {users.map((u, i) => (
                 <Link
                   key={u.id}

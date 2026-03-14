@@ -152,9 +152,9 @@ body {
 }
 .page-wrapper {
   flex: 1;
-  padding: 32px 36px;
-  max-width: 1200px;
+  padding: 32px 48px;
   width: 100%;
+  min-width: 0;
 }
 .page-header {
   margin-bottom: 28px;

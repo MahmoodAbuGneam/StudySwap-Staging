@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { listSwaps, acceptSwap, rejectSwap, confirmSwap, cancelSwap } from '../api/swaps'
-import { getUserSkills } from '../api/skills'
 import { getUser } from '../api/users'
 import { useAuth } from '../context/AuthContext'
 import Avatar from '../components/Avatar'
@@ -17,22 +16,20 @@ const STATUS = {
 
 function usePartnerInfo(userId) {
   const [partner, setPartner] = useState(null)
-  const [skills, setSkills] = useState([])
   useEffect(() => {
     if (!userId) return
     getUser(userId).then(setPartner).catch(() => {})
-    getUserSkills(userId).then(setSkills).catch(() => {})
   }, [userId])
-  return { partner, skills }
+  return partner
 }
 
 function SwapCard({ swap, myId, onAction, onRate }) {
   const isReceiver = swap.receiver_id === myId
   const partnerId  = isReceiver ? swap.sender_id : swap.receiver_id
-  const { partner, skills } = usePartnerInfo(partnerId)
+  const partner    = usePartnerInfo(partnerId)
 
-  const offeredSkill = skills.find((s) => s.id === swap.offered_skill_id)?.name || `Skill #${swap.offered_skill_id.slice(-4)}`
-  const wantedSkill  = skills.find((s) => s.id === swap.wanted_skill_id)?.name  || `Skill #${swap.wanted_skill_id.slice(-4)}`
+  const offeredSkill = swap.offered_skill_name || `Skill #${swap.offered_skill_id.slice(-4)}`
+  const wantedSkill  = swap.wanted_skill_name  || `Skill #${swap.wanted_skill_id.slice(-4)}`
 
   const iConfirmed = isReceiver ? swap.receiver_confirmed : swap.sender_confirmed
   const s = STATUS[swap.status] || STATUS.pending

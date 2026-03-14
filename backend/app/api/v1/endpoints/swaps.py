@@ -10,13 +10,16 @@ from app.core.security import get_current_user
 router = APIRouter()
 
 
-def serialize_swap(swap: dict) -> SwapOut:
+def serialize_swap(swap: dict, skill_names: dict = None) -> SwapOut:
+    sn = skill_names or {}
     return SwapOut(
         id=str(swap["_id"]),
         sender_id=swap["sender_id"],
         receiver_id=swap["receiver_id"],
         offered_skill_id=swap["offered_skill_id"],
         wanted_skill_id=swap["wanted_skill_id"],
+        offered_skill_name=sn.get(swap["offered_skill_id"], ""),
+        wanted_skill_name=sn.get(swap["wanted_skill_id"], ""),
         message=swap.get("message", ""),
         session_type=swap.get("session_type", "online"),
         status=swap["status"],
@@ -77,7 +80,11 @@ async def create_swap(data: SwapCreate, current_user=Depends(get_current_user), 
     )
     result = await db["swaps"].insert_one(doc)
     doc["_id"] = result.inserted_id
-    return serialize_swap(doc)
+    skill_names = {
+        data.offered_skill_id: offered["name"],
+        data.wanted_skill_id: wanted["name"],
+    }
+    return serialize_swap(doc, skill_names)
 
 
 @router.get("")
@@ -86,7 +93,29 @@ async def list_swaps(current_user=Depends(get_current_user), db=Depends(get_db))
     swaps = await db["swaps"].find(
         {"$or": [{"sender_id": my_id}, {"receiver_id": my_id}]}
     ).to_list(None)
-    return [serialize_swap(s) for s in swaps]
+
+    # Collect all skill IDs referenced across all swaps
+    skill_ids = set()
+    for s in swaps:
+        skill_ids.add(s["offered_skill_id"])
+        skill_ids.add(s["wanted_skill_id"])
+
+    # Bulk-fetch skill documents and build id→name map
+    skill_names: dict = {}
+    if skill_ids:
+        valid_oids = []
+        for sid in skill_ids:
+            try:
+                valid_oids.append(ObjectId(sid))
+            except Exception:
+                pass
+        if valid_oids:
+            skill_docs = await db["skills"].find(
+                {"_id": {"$in": valid_oids}}, {"_id": 1, "name": 1}
+            ).to_list(None)
+            skill_names = {str(d["_id"]): d["name"] for d in skill_docs}
+
+    return [serialize_swap(s, skill_names) for s in swaps]
 
 
 @router.put("/{swap_id}/accept", response_model=SwapOut)

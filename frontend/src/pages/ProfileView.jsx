@@ -180,40 +180,94 @@ export default function ProfileView() {
         </div>
 
         {/* ── Ratings ──────────────────────────────────── */}
-        <div className="card card-p anim-fade-up delay-2">
-          <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-1)', marginBottom: 8 }}>
-            Reviews
-          </h2>
-          {profile.total_ratings > 0 && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20, padding: '14px', background: 'var(--bg)', borderRadius: 12 }}>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 700, color: 'var(--text-1)', lineHeight: 1 }}>
-                  {profile.avg_rating.toFixed(1)}
+        <div className="card anim-fade-up delay-2" style={{ overflow: 'hidden' }}>
+
+          {/* Summary header */}
+          {profile.total_ratings > 0 ? (
+            <div style={{
+              padding: '24px 24px 20px',
+              background: 'linear-gradient(135deg, var(--navy) 0%, var(--navy-3) 100%)',
+              position: 'relative',
+              overflow: 'hidden',
+            }}>
+              {/* Decorative circle */}
+              <div style={{
+                position: 'absolute', top: -30, right: -30,
+                width: 120, height: 120,
+                borderRadius: '50%',
+                background: 'rgba(200,150,60,0.12)',
+                pointerEvents: 'none',
+              }} />
+              <div style={{ position: 'relative' }}>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: 10 }}>
+                  Reviews
                 </div>
-                <StarRating value={profile.avg_rating} readonly size="sm" />
-                <div style={{ fontSize: 11, color: 'var(--text-3)', marginTop: 4 }}>{profile.total_ratings} review{profile.total_ratings !== 1 ? 's' : ''}</div>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 14 }}>
+                  <div>
+                    <div style={{ fontFamily: 'var(--font-display)', fontSize: 52, fontWeight: 700, color: '#fff', lineHeight: 1, letterSpacing: '-0.02em' }}>
+                      {profile.avg_rating.toFixed(1)}
+                    </div>
+                    <div style={{ marginTop: 6 }}>
+                      <StarRating value={profile.avg_rating} readonly size="sm" />
+                    </div>
+                  </div>
+                  <div style={{ paddingBottom: 4 }}>
+                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.4 }}>
+                      Based on
+                    </div>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>
+                      {profile.total_ratings} review{profile.total_ratings !== 1 ? 's' : ''}
+                    </div>
+                  </div>
+                </div>
               </div>
+            </div>
+          ) : (
+            <div style={{ padding: '20px 24px 16px', borderBottom: '1px solid var(--border)' }}>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-1)' }}>Reviews</div>
             </div>
           )}
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxHeight: 400, overflowY: 'auto' }}>
+          {/* Review list */}
+          <div style={{ padding: '16px 20px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
             {ratings.length === 0 ? (
-              <div className="empty-state" style={{ padding: '28px 0' }}>
-                <p className="text-muted">No reviews yet</p>
+              <div className="empty-state" style={{ padding: '32px 0' }}>
+                <div style={{ fontSize: 32, marginBottom: 10 }}>💬</div>
+                <p style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-2)', marginBottom: 4 }}>No reviews yet</p>
+                <p className="text-muted" style={{ fontSize: 12 }}>Reviews appear after completed swaps</p>
               </div>
-            ) : ratings.map((r) => (
-              <div key={r.id} style={{ padding: '12px 14px', background: 'var(--bg)', borderRadius: 10 }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+            ) : ratings.map((r, i) => (
+              <div
+                key={r.id}
+                style={{
+                  padding: '14px 16px',
+                  background: 'var(--bg)',
+                  borderRadius: 12,
+                  borderLeft: `3px solid ${r.score >= 4 ? 'var(--gold)' : r.score >= 3 ? 'var(--teal)' : 'var(--coral)'}`,
+                }}
+              >
+                {/* Stars row */}
+                <div style={{ marginBottom: r.tags?.length > 0 || r.review ? 8 : 0 }}>
                   <StarRating value={r.score} readonly size="sm" />
-                  {r.tags?.length > 0 && (
-                    <div style={{ display: 'flex', gap: 4 }}>
-                      {r.tags.map((tag) => (
-                        <span key={tag} className="badge badge-navy" style={{ textTransform: 'capitalize' }}>{tag}</span>
-                      ))}
-                    </div>
-                  )}
                 </div>
-                {r.review && <p style={{ fontSize: 13, color: 'var(--text-2)', lineHeight: 1.6 }}>{r.review}</p>}
+
+                {/* Tags — full width, wrapping */}
+                {r.tags?.length > 0 && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: r.review ? 8 : 0 }}>
+                    {r.tags.map((tag) => (
+                      <span key={tag} className="badge badge-navy" style={{ textTransform: 'capitalize', fontSize: 10 }}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Review text */}
+                {r.review && (
+                  <p style={{ fontSize: 13, color: 'var(--text-2)', lineHeight: 1.65, margin: 0 }}>
+                    "{r.review}"
+                  </p>
+                )}
               </div>
             ))}
           </div>

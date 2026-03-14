@@ -28,6 +28,8 @@ class SwapOut(BaseModel):
     receiver_id: str
     offered_skill_id: str
     wanted_skill_id: str
+    offered_skill_name: str = ""
+    wanted_skill_name: str = ""
     message: str
     session_type: str
     status: str
